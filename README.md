@@ -1,1 +1,1 @@
-# naver17homework
+# naver 비트캠프 17기 개인 프로젝트
