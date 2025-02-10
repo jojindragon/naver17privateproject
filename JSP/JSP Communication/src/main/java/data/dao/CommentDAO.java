@@ -38,6 +38,7 @@ public class CommentDAO {
 		}
 	}
 
+	// 게시판의 댓글 갯수
 	public int getAllCommentAndReply(int board_id) {
 		int total_cnt = 0;
 		Connection conn = null;
@@ -66,6 +67,38 @@ public class CommentDAO {
 			db.dbClose(rs, pstmt, conn);
 		}
 
+		return total_cnt;
+	}
+	
+	// 유저가 쓴 댓글 갯수
+	public int getAllWriteComments(int user_id) {
+		int total_cnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = """
+				select
+				(select count(*) from comments where user_id = ?) +
+				(select count(*) from replies where user_id = ?) AS total_cnt;
+				""";
+		conn = db.getConnection();
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, user_id);
+			pstmt.setInt(2, user_id);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				total_cnt = rs.getInt("total_cnt");
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
 		return total_cnt;
 	}
 

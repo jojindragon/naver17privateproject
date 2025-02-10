@@ -256,4 +256,33 @@ private MysqlConnect db = new MysqlConnect();
 					
 	}
 	
+	// 작성한 글 갯수
+	public int getAllWriteBoards(int user_id) {
+		int total_cnt = 0;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		String sql = """
+				select count(*) as total_cnt from boards where user_id = ?
+				""";
+		conn = db.getConnection();
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, user_id);
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				total_cnt = rs.getInt("total_cnt");
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+
+		return total_cnt;
+	}
+	
 }

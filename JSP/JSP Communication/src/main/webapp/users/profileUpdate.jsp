@@ -13,4 +13,8 @@ int user_id = Integer.parseInt(request.getParameter("user_id"));
 UserDTO dto = new UserDTO(user_id, username, password, nickname, email, profile);
 UserDAO dao = new UserDAO();
 dao.userProfileUpdate(dto);
+
+/* session 갱신 */
+UserDTO updatedUser = dao.getUserByID(dto.getUser_id());
+session.setAttribute("User", updatedUser);
 %>

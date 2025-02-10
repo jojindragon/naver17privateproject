@@ -22,9 +22,6 @@ if (dark == null) {
 UserDTO user_dto = (UserDTO) session.getAttribute("User");
 boolean status = user_dto != null;
 int user_id = 0;
-if(status) {
-	user_id = user_dto.getUser_id();
-}
 
 int board_id = Integer.parseInt(request.getParameter("board_id"));
 BoardDAO b_dao = new BoardDAO();
@@ -33,6 +30,18 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 CommentDAO c_dao = new CommentDAO();
 List<CommentDTO> clist = c_dao.getComments(board_id);
+
+int user_board = 0;
+int user_comments = 0;
+if(status) {
+	user_id = user_dto.getUser_id();
+	user_board = b_dao.getAllWriteBoards(user_id);
+	user_comments = c_dao.getAllWriteComments(user_id);
+} else {
+	if(board_dto.isIs_secret()) {
+		response.sendRedirect("./homepage.jsp");
+	}
+}
 %>
 <!DOCTYPE html>
 <html>
@@ -528,12 +537,14 @@ function logout() {
 						src="<%=user_dto.getProfile()%>?v=<%=System.currentTimeMillis()%>"
 						width="80" class="me-3" />
 					<div>
-						<p class="mb-0" style="color: lightgreen; font-size: 0.8em;">자유
-							게시판</p>
+						<p class="mb-0" style="color: lightgreen; font-size: 0.8em;">자유게시판</p>
 						<b class="mb-0"><%=user_dto.getNickname()%></b>
 					</div>
 				</div>
 			</div>
+			<br><br>
+    		<p>&nbsp;작성한 글&nbsp;: <%=user_board %>개</p>
+			<p>작성한 댓글: <%=user_comments %>개</p>
 			<hr>
 			<div class="side" data-bs-toggle="modal"
 				data-bs-target="#boardWrite_Modal">

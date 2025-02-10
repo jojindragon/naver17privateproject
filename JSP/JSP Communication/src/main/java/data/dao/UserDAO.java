@@ -42,6 +42,46 @@ public class UserDAO {
 		
 	}
 	
+	// 단일 유저 얻기
+	public UserDTO getUserByID(int user_id) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = """
+				select * from users
+				where user_id = ?
+				""";
+		
+		conn = db.getConnection();
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, user_id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				UserDTO dto = new UserDTO();
+				dto.setUser_id(rs.getInt("user_id"));
+				dto.setUsername(rs.getString("username"));
+				dto.setPassword(rs.getString("password"));
+				dto.setNickname(rs.getString("nickname"));
+				dto.setEmail(rs.getString("email"));
+				dto.setProfile(rs.getString("profile"));
+				dto.setAdmin(rs.getBoolean("admin"));
+				dto.setCreated_at(rs.getTimestamp("created_at"));
+				
+				return dto;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			db.dbClose(rs, pstmt, conn);
+		}
+		
+		return null;
+	}
+	
 	// 로그인 - ID & PWD 검증
 	public UserDTO login(String username, String password) {		
 		Connection conn = null;

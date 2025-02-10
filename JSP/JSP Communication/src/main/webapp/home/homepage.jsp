@@ -1,3 +1,5 @@
+<%@page import="data.dao.CommentDAO"%>
+<%@page import="data.dao.BoardDAO"%>
 <%@page import="data.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -12,6 +14,15 @@ if(dark == null) {
 UserDTO user_dto = (UserDTO) session.getAttribute("User");
 boolean status = user_dto != null;
 
+BoardDAO b_dao = new BoardDAO();
+CommentDAO c_dao = new CommentDAO();
+
+int user_board = 0;
+int user_comments = 0;
+if(status) {
+	user_board = b_dao.getAllWriteBoards(user_dto.getUser_id());
+	user_comments = c_dao.getAllWriteComments(user_dto.getUser_id());
+}
 %>
 <!DOCTYPE html>
 <html>
@@ -116,7 +127,8 @@ body * {
 .nav-item .nav-link.active {
  	/* 선택(강조) 디자인 */
   	background-color: <%=dark? "white":"#007bff"%>; 
-	color: <%=dark? "black":"white"%>;  	
+	color: "black";
+	border: 1px solid;
   	border-radius: 5px; /* 테두리 둥글게 */
 }
 
@@ -245,14 +257,17 @@ loading...
   </div>
   <div class="offcanvas-body">
   	<div class="container text-center">
-		<div class="d-flex align-items-center">
+	  <div class="d-flex align-items-center">
       	<img src="<%=user_dto.getProfile() %>?v=<%= System.currentTimeMillis() %>" width="80" class="me-3" />
-	  <div>
-       	<p class="mb-0" style="color: lightgreen;font-size: 0.8em;">자유 게시판</p>
-       	<b class="mb-0"><%=user_dto.getNickname() %></b>
-	  </div>
-	 </div>
+	    <div>
+       	  <p class="mb-0" style="color: lightgreen;font-size: 0.8em;">자유 게시판</p>
+       	  <b class="mb-0"><%=user_dto.getNickname() %></b>
+	    </div>
+	  </div>	  
     </div>
+    <br><br>
+    <p>&nbsp;작성한 글&nbsp;: <%=user_board %>개</p>
+	<p>작성한 댓글: <%=user_comments %>개</p>
   	<hr>
     <div class="side" data-bs-toggle="modal" data-bs-target="#boardWrite_Modal">
 		<i class="bi bi-pencil">&nbsp;&nbsp;글쓰기</i>

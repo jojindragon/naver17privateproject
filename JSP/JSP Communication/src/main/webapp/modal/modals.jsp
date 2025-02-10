@@ -1,10 +1,16 @@
+<%@page import="data.dao.UserDAO"%>
 <%@page import="data.dto.UserDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%
 /* User session 불러오기 */
 UserDTO user_dto = (UserDTO) session.getAttribute("User");
+UserDAO user_dao = new UserDAO();
 boolean status = user_dto != null;
+if(status) {
+	UserDTO updatedUser = user_dao.getUserByID(user_dto.getUser_id());
+    session.setAttribute("User", updatedUser);
+}
 %>
 <!DOCTYPE html>
 <html>
@@ -331,7 +337,7 @@ boolean status = user_dto != null;
 					<hr>
 
 					<span class="fail"></span>
-					<button type="submit" class="btn btn-info btnfrm">회원가입</button>
+					<button type="submit" class="btn btn-info btnfrm">프로필 수정</button>
 				</form>
 			</div>
 		</div>
@@ -353,6 +359,10 @@ $("#profilefrm").submit(function(e) {
 		data : $(this).serialize(),
 		url : "../users/profileUpdate.jsp",
 		success : function(res) {
+			<%
+			UserDTO updatedUser = user_dao.getUserByID(user_dto.getUser_id());
+		    session.setAttribute("User", updatedUser);		    
+			%>
 			location.reload();
 		},
 		error : function() {
