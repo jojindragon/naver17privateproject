@@ -32,7 +32,7 @@
 ### 🔍 Description
 
 - **Java** | 백엔드 로직
-- **JSP / Tomcat |  서버 사이드 렌더링 동적 웹페이지 생성
+- **JSP / Tomcat** |  서버 사이드 렌더링 동적 웹페이지 생성
 - **HTML, CSS, JS, jQuery, Bootstrap5** | UI 구성 및 사용자 인터랙션 처리, Ajax를 통한 비동기 통신
 - **MySQL / JDBC / NCP** | 사용자 및 게시글 등 주요 데이터 저장 & DAO 방식의 CRUD 통신
 <p>&nbsp;</p>
